@@ -1,0 +1,81 @@
+#include "main.h"
+#include <unistd.h>
+
+/**
+ * _putchar - writes a character to stdout
+ * @c: the character to write
+ * Return: 1 on success, -1 on error
+ */
+int _putchar(char c)
+{
+	return (write(1, &c, 1));
+}
+
+/**
+ * get_handler - returns the handler function for a given specifier
+ * @c: the specifier character
+ * Return: pointer to handler function, or NULL if not found
+ */
+static int (*get_handler(char c))(va_list *)
+{
+	spec_t specs[] = {
+		{'c', print_char},
+		{'s', print_string},
+		{'%', print_percent},
+		{0, NULL}
+	};
+	int i = 0;
+
+	while (specs[i].handler)
+	{
+		if (specs[i].spec == c)
+			return (specs[i].handler);
+		i++;
+	}
+	return (NULL);
+}
+
+/**
+ * _printf - produces output according to a format
+ * @format: character string composed of zero or more directives
+ * Return: number of characters printed (excluding null byte)
+ */
+int _printf(const char *format, ...)
+{
+	va_list args;
+	int i = 0, count = 0;
+	int (*handler)(va_list *);
+
+	if (!format)
+		return (-1);
+
+	va_start(args, format);
+	while (format[i])
+	{
+		if (format[i] != '%')
+		{
+			_putchar(format[i]);
+			count++;
+		}
+		else
+		{
+			i++;
+			if (!format[i])
+				break;
+			handler = get_handler(format[i]);
+			if (handler)
+			{
+				count += handler(&args);
+			}
+			else
+			{
+				_putchar('%');
+				_putchar(format[i]);
+				count += 2;
+			}
+		}
+		i++;
+	}
+	va_end(args);
+	return (count);
+}
