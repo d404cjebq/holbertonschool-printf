@@ -2,7 +2,18 @@
 #include <unistd.h>
 
 /**
- * _putchar - writes a character to stdout
+ * struct specifier - links a format specifier to its handler
+ * @spec: the format specifier character
+ * @handler: pointer to the corresponding handler function
+ */
+typedef struct specifier
+{
+	char spec;
+	int (*handler)(va_list *);
+} spec_t;
+
+/**
+ * _putchar - writes a single character to stdout
  * @c: the character to write
  * Return: 1 on success, -1 on error
  */
@@ -12,7 +23,7 @@ int _putchar(char c)
 }
 
 /**
- * get_handler - returns the handler function for a given specifier
+ * get_handler - finds the handler function for a format specifier
  * @c: the specifier character
  * Return: pointer to handler function, or NULL if not found
  */
@@ -36,7 +47,7 @@ static int (*get_handler(char c))(va_list *)
 }
 
 /**
- * _printf - produces output according to a format
+ * _printf - produces output according to a format string
  * @format: character string composed of zero or more directives
  * Return: number of characters printed (excluding null byte)
  */
