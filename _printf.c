@@ -40,6 +40,8 @@ int _printf(const char *format, ...)
 				count += print_hex(va_arg(args, unsigned int));
 			else if (format[i] == 'X')
 				count += print_HEX(va_arg(args, unsigned int));
+	                else if (format[i] == 'S')
+                                count += print_S(va_arg(args, char *));
 			else
 			{
 				count += _putchar('%');
